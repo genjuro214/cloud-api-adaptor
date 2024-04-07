@@ -62,6 +62,8 @@ image-debug:
 	@echo "Enabling debug preset..."
 	rm -rf resources/build*Image
 	touch resources/buildDebugImage
+	mkdir -p resources/binaries-tree
+	chmod -v 755 resources/binaries-tree
 	rm -rf ./build
 	@echo "Building debug image..."
 ifeq ($(ARCH),s390x)
