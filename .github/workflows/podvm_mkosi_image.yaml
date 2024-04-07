@@ -48,13 +48,13 @@ jobs:
           sudo ln -s $PWD/mkosi/bin/mkosi /usr/local/bin/mkosi
           mkosi --version
 
-          #- name: Build builder
-          #working-directory: src/cloud-api-adaptor/podvm-mkosi
-          #run: make fedora-binaries-builder
+      - name: Build builder
+        working-directory: src/cloud-api-adaptor/podvm-mkosi
+        run: make fedora-binaries-builder
 
-          #- name: Build binaries
-          #working-directory: src/cloud-api-adaptor/podvm-mkosi
-          #run: make binaries
+      - name: Build binaries
+        working-directory: src/cloud-api-adaptor/podvm-mkosi
+        run: make binaries
 
       - name: Build image
         run: sudo make image-debug
