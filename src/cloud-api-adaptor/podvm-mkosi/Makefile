@@ -1,6 +1,13 @@
+include ../Makefile.defaults
+
 AA_KBC  ?= offline_fs_kbc
 ARCH    ?= $(subst x86_64,amd64,$(shell uname -m))
 BUILDER = fedora-binaries-builder-$(ARCH)
+
+REGISTRY ?= quay.io/confidential-containers
+PODVM_DISTRO ?= fedora
+PODVM_TAG ?= $(VERSIONS_HASH)
+PODVM_IMAGE ?= $(REGISTRY)/podvm-generic-$(PODVM_DISTRO)-$(ARCH):$(PODVM_TAG)
 
 .DEFAULT_GOAL := all
 .PHONY: all
@@ -51,7 +58,7 @@ image:
 ifeq ($(ARCH),s390x)
 	touch resources/buildS390xImage
 	mkosi --profile production.conf
-	../hack/build-s390x-image.sh
+	sudo ../hack/build-s390x-image.sh
 else
 	touch resources/buildBootableImage
 	nix develop ..#podvm-mkosi --command mkosi --environment=VARIANT_ID=production
@@ -69,10 +76,20 @@ image-debug:
 ifeq ($(ARCH),s390x)
 	touch resources/buildS390xImage
 	mkosi --profile debug.conf
-	../hack/build-s390x-image.sh
+	sudo ../hack/build-s390x-image.sh
 else
 	touch resources/buildBootableImage
 	nix develop ..#podvm-mkosi --command mkosi --environment=VARIANT_ID=debug
+endif
+
+PHONY: push-image
+push-image:
+	@echo "Push podvm image to remote repository..."
+ifeq ($(ARCH),s390x)
+	docker buildx build \
+		-t $(PODVM_IMAGE) \
+		--load \
+		-f ../podvm/Dockerfile.podvm.fedora .
 endif
 
 PHONY: clean

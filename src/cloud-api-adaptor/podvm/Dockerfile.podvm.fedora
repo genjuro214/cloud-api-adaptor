@@ -1,0 +1,3 @@
+FROM scratch
+
+COPY build/podvm-s390x.qcow2 /

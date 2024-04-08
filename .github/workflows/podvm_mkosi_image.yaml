@@ -37,9 +37,9 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          cat /etc/os-release
           sudo apt-get update -y
           sudo apt-get install -y bubblewrap alien dnf qemu-utils uidmap
+          sudo snap install yq
 
       - name: Install mkosi
         run: |
@@ -57,7 +57,7 @@ jobs:
         run: make binaries
 
       - name: Build image
-        run: sudo make image-debug
+        run: make image-debug
         working-directory: src/cloud-api-adaptor/podvm-mkosi
 
 
