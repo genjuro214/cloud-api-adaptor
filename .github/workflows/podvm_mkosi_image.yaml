@@ -55,11 +55,15 @@ jobs:
       - name: Build binaries
         working-directory: src/cloud-api-adaptor/podvm-mkosi
         run: make binaries
+          #run: mkdir -p resources/binaries-tree
 
       - name: Build image
         run: make image-debug
         working-directory: src/cloud-api-adaptor/podvm-mkosi
 
+      - name: Push image
+        run: make push-image
+        working-directory: src/cloud-api-adaptor/podvm-mkosi
 
       # TODO - build image via mkosi when s390x is available
       # TODO - upload the image 
